@@ -1,0 +1,16 @@
+[package]
+name = "bevy_6gon"
+version = "0.1.0"
+authors = ["Igal Alkon"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bevy = "0.6.1"
+lyon_tessellation = "0.17.10"
+bevy_prototype_lyon = "0.4.0"
+hexagon_tiles = "0.1.0"
+
+[workspace]
+resolver = "2" # Important! wgpu/Bevy needs this!
