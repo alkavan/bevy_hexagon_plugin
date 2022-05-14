@@ -7,9 +7,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy = "0.6.1"
+bevy = "0.7.0"
 lyon_tessellation = "0.17.10"
-bevy_prototype_lyon = "0.4.0"
+bevy_prototype_lyon = "0.5.0"
 hexagon_tiles = "0.1.0"
 
 [workspace]

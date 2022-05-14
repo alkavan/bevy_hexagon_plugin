@@ -8,8 +8,8 @@ pub struct HexMapPlugin;
 impl Plugin for HexMapPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugin(ShapePlugin)
-            .add_startup_system(setup_map.system())
-            .add_system(update_map.system());
+            .add_startup_system(setup_map)
+            .add_system(update_map);
     }
 }
 
@@ -19,10 +19,10 @@ struct HexComponent(Hex);
 fn setup_map(mut commands: Commands) {
     for q in 1..3 {
         for r in 1..3 {
-            let hexagon = shapes::RegularPolygon {
+            let hexagon = RegularPolygon {
                 sides: 6,
                 center: Vec2::ZERO,
-                feature: shapes::RegularPolygonFeature::Radius(20.0),
+                feature: RegularPolygonFeature::Radius(20.0),
                 ..shapes::RegularPolygon::default()
             };
 
