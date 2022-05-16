@@ -2,6 +2,7 @@ use bevy::math::vec3;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use hexagon_tiles::hexagon::Hex;
+use rand::prelude::*;
 
 pub struct HexMapPlugin;
 
@@ -18,7 +19,7 @@ struct HexComponent(Hex);
 
 fn setup_map(mut commands: Commands) {
     for q in 1..3 {
-        for r in 1..3 {
+        for r in 1..10 {
             let hexagon = RegularPolygon {
                 sides: 6,
                 center: Vec2::ZERO,
@@ -43,8 +44,11 @@ fn setup_map(mut commands: Commands) {
 }
 
 fn update_map(mut transforms: Query<(&mut Transform, &HexComponent)>) {
+    let mut rng = thread_rng();
+
     for (mut transform, component) in transforms.iter_mut() {
-        // transform.translation = transform.translation + vec3(1.0, 1.0, 1.0);
+        transform.translation =
+            transform.translation + vec3(rng.gen_range(-1.5..1.5), rng.gen_range(-1.5..1.5), 0.0);
         // let x = transform.translation.x;
         // let y = transform.translation.y;
         let hex: Hex = component.0;

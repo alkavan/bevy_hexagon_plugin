@@ -11,6 +11,7 @@ bevy = "0.7.0"
 lyon_tessellation = "0.17.10"
 bevy_prototype_lyon = "0.5.0"
 hexagon_tiles = "0.1.0"
+rand = "0.8.5"
 
 [workspace]
 resolver = "2" # Important! wgpu/Bevy needs this!
