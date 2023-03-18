@@ -1,5 +1,6 @@
 use bevy::math::vec3;
 use bevy::prelude::*;
+use bevy_prototype_lyon::entity::ShapeBundle;
 use bevy_prototype_lyon::prelude::*;
 use hexagon_tiles::hexagon::Hex;
 use rand::prelude::*;
@@ -27,18 +28,15 @@ fn setup_map(mut commands: Commands) {
                 ..shapes::RegularPolygon::default()
             };
 
-            let shape_bundle = GeometryBuilder::build_as(
-                &hexagon,
-                DrawMode::Outlined {
-                    fill_mode: FillMode::color(Color::TEAL),
-                    outline_mode: StrokeMode::new(Color::RED, 1.0),
+            commands.spawn((
+                ShapeBundle {
+                    path: GeometryBuilder::build_as(&hexagon),
+                    ..default()
                 },
-                Transform::default(),
-            );
-
-            commands
-                .spawn_bundle(shape_bundle)
-                .insert(HexComponent(Hex::new(q, r)));
+                Fill::color(Color::TEAL),
+                Stroke::new(Color::RED, 1.0),
+                HexComponent(Hex::new(q, r)),
+            ));
         }
     }
 }
@@ -49,9 +47,9 @@ fn update_map(mut transforms: Query<(&mut Transform, &HexComponent)>) {
     for (mut transform, component) in transforms.iter_mut() {
         transform.translation =
             transform.translation + vec3(rng.gen_range(-1.5..1.5), rng.gen_range(-1.5..1.5), 0.0);
-        // let x = transform.translation.x;
-        // let y = transform.translation.y;
+        let x = transform.translation.x;
+        let y = transform.translation.y;
         let hex: Hex = component.0;
-        println!("Hex ({}, {})", hex.q(), hex.r())
+        println!("Hex ({}, {}) -> ({}, {})", hex.q(), hex.r(), x, y)
     }
 }
