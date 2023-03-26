@@ -274,17 +274,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "bevy_6gon"
-version = "0.1.0"
-dependencies = [
- "bevy",
- "bevy_prototype_lyon",
- "hexagon_tiles",
- "lyon_tessellation",
- "rand",
-]
-
-[[package]]
 name = "bevy_a11y"
 version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -519,6 +508,17 @@ dependencies = [
  "gltf",
  "percent-encoding",
  "thiserror",
+]
+
+[[package]]
+name = "bevy_hexagon_plugin"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+ "bevy_prototype_lyon",
+ "hexagon_tiles",
+ "lyon_tessellation",
+ "rand",
 ]
 
 [[package]]

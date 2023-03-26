@@ -1,5 +1,5 @@
 [package]
-name = "bevy_6gon"
+name = "bevy_hexagon_plugin"
 version = "0.1.0"
 authors = ["Igal Alkon"]
 edition = "2021"
