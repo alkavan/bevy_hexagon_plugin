@@ -1,9 +1,13 @@
+mod map;
 mod plugin;
+mod shapes;
 
-use crate::plugin::{create_flat_layout, HexMap, Hexagons};
+use crate::map::HexMap;
+use crate::plugin::create_flat_layout;
+use crate::shapes::Hexagons;
 use bevy::prelude::*;
+use bevy::utils::HashMap;
 use plugin::HexMapPlugin;
-use std::collections::HashMap;
 
 fn main() {
     let tile_size = Vec2::new(20.0, 20.0);
