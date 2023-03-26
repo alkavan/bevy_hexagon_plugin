@@ -10,7 +10,7 @@ edition = "2021"
 bevy = "0.10"
 lyon_tessellation = "1.0.8"
 bevy_prototype_lyon = "0.8.0"
-hexagon_tiles = "0.1.0"
+hexagon_tiles = "0.2.0"
 rand = "0.8.5"
 
 [workspace]
