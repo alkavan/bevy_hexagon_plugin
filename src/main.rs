@@ -5,8 +5,10 @@ mod shapes;
 use crate::map::HexMap;
 use crate::plugin::create_flat_layout;
 use crate::shapes::Hexagons;
+use bevy::diagnostic::FrameTimeDiagnosticsPlugin;
 use bevy::prelude::*;
 use bevy::utils::HashMap;
+use bevy::window::PresentMode;
 use plugin::HexMapPlugin;
 
 fn main() {
@@ -19,6 +21,22 @@ fn main() {
         .insert_resource(map)
         .add_plugins((DefaultPlugins, HexMapPlugin))
         .add_systems(PostStartup, camera_system)
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            primary_window: Some(Window {
+                title: "Bevy Hexagon Plugin".into(),
+                resolution: (1280., 720.).into(),
+                present_mode: PresentMode::AutoVsync,
+                // Tells wasm to resize the window according to the available canvas
+                fit_canvas_to_parent: true,
+                // Tells wasm not to override default event handling, like F5, Ctrl+R etc.
+                prevent_default_event_handling: false,
+                ..default()
+            }),
+            ..default()
+        }))
+        .add_plugin(FrameTimeDiagnosticsPlugin::default())
+        .add_plugin(HexMapPlugin)
+        .add_startup_system(camera_system)
         .run();
 }
 
