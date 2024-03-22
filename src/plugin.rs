@@ -5,7 +5,10 @@ use bevy_prototype_lyon::entity::ShapeBundle;
 use bevy_prototype_lyon::prelude::*;
 use hexagon_tiles::hexagon::Hex;
 use hexagon_tiles::layout::{
-    Layout, LayoutTool, LAYOUT_ORIENTATION_FLAT, LAYOUT_ORIENTATION_POINTY,
+    Layout,
+    LayoutTool,
+    LAYOUT_ORIENTATION_FLAT,
+    //LAYOUT_ORIENTATION_POINTY,
 };
 use hexagon_tiles::point::Point;
 
@@ -13,9 +16,9 @@ pub struct HexMapPlugin;
 
 impl Plugin for HexMapPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugin(ShapePlugin)
-            .add_startup_system(setup_map)
-            .add_system(update_map);
+        app.add_plugins(ShapePlugin)
+            .add_systems(Startup, setup_map)
+            .add_systems(Update, update_map);
     }
 }
 
@@ -24,7 +27,7 @@ struct HexComponent(Hex);
 
 fn setup_map(mut commands: Commands, map_resource: Res<HexMap>) {
     for (key, value) in &map_resource.map {
-        let hexagon = RegularPolygon {
+        let hexagon = bevy_prototype_lyon::prelude::RegularPolygon {
             sides: 6,
             center: Vec2::ZERO,
             feature: RegularPolygonFeature::Radius(20.0),

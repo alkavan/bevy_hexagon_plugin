@@ -17,9 +17,8 @@ fn main() {
 
     App::new()
         .insert_resource(map)
-        .add_plugins(DefaultPlugins)
-        .add_plugin(HexMapPlugin)
-        .add_startup_system(camera_system)
+        .add_plugins((DefaultPlugins, HexMapPlugin))
+        .add_systems(PostStartup, camera_system)
         .run();
 }
 
