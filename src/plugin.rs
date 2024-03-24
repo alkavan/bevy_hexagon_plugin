@@ -1,6 +1,8 @@
 use crate::map::HexMap;
+
 use bevy::math::vec3;
 use bevy::prelude::*;
+use bevy::text::JustifyText;
 use bevy::window::PrimaryWindow;
 use bevy_prototype_lyon::entity::ShapeBundle;
 use bevy_prototype_lyon::prelude::*;
@@ -13,9 +15,10 @@ use hexagon_tiles::layout::{
 };
 use hexagon_tiles::point::Point;
 use std::ops::Add;
-use std::slice::Windows;
 
-pub struct HexMapPlugin;
+pub struct HexMapPlugin {
+    pub tile_size: Vec2
+}
 
 impl Plugin for HexMapPlugin {
     fn build(&self, app: &mut App) {
@@ -45,7 +48,7 @@ fn setup_map(
         let hexagon = bevy_prototype_lyon::prelude::RegularPolygon {
             sides: 6,
             center: Vec2::ZERO,
-            feature: RegularPolygonFeature::Radius(20.0),
+            feature: RegularPolygonFeature::Radius(32.0),
             ..shapes::RegularPolygon::default()
         };
 
@@ -54,7 +57,6 @@ fn setup_map(
         commands.spawn((
             ShapeBundle {
                 path: GeometryBuilder::build_as(&hexagon),
-                transform: Transform::from_xyz(point.x as f32, point.y as f32, 0.0),
                 ..default()
             },
             Fill::color(Color::TEAL),
@@ -66,21 +68,18 @@ fn setup_map(
         commands.spawn((
             // Create a TextBundle that has a Text with a list of sections.
             TextBundle::from_sections([TextSection::new(
-                format!("({}, {}, {})", key.q(), key.r(), key.s()),
+                format!("({},{},{})", key.q(), key.r(), key.s()),
                 TextStyle {
                     font: asset_server.load("fonts/RobotoMono-Regular.ttf"),
                     font_size: 11.0,
                     color: Color::WHITE,
                 },
             )])
-            .with_text_alignment(TextAlignment::Center)
+            .with_text_justify(JustifyText::Center)
             .with_style(Style {
                 position_type: PositionType::Absolute,
-                position: UiRect {
-                    top: Val::Px((point.y as f32).add(wh / 2.)),
-                    left: Val::Px((point.x as f32).add(ww / 2.)),
-                    ..default()
-                },
+                top: Val::Px((point.y as f32).add(wh / 2.)),
+                left: Val::Px((point.x as f32).add(ww / 2.)),
                 ..default()
             }),
             HexagonText,
@@ -92,11 +91,11 @@ fn update_map(
     mut transforms: Query<(&mut Transform, &HexagonComponent)>,
     map_resource: Res<HexMap>,
 ) {
-    // for (mut transform, component) in transforms.iter_mut() {
-    //     let hex: Hex = component.0;
-    //     let point = LayoutTool::hex_to_pixel(map_resource.layout, hex);
-    //     transform.translation = vec3(point.x as f32, point.y as f32, 0.0);
-    // }
+    for (mut transform, component) in transforms.iter_mut() {
+        let hex: Hex = component.0;
+        let point = LayoutTool::hex_to_pixel(map_resource.layout, hex);
+        transform.translation = vec3(point.x as f32, point.y as f32, 0.0);
+    }
 }
 
 fn text_update_system(
