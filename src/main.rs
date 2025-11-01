@@ -9,14 +9,13 @@ use crate::map::HexMap;
 use crate::plugin::create_flat_layout;
 use crate::shapes::Hexagons;
 use bevy::diagnostic::FrameTimeDiagnosticsPlugin;
-
-use bevy::utils::HashMap;
+use std::collections::HashMap;
 use bevy::window::{PresentMode, WindowResolution};
 use plugin::HexMapPlugin;
 use crate::debug::DebugGridPlugin;
 
 fn main() {
-    let window_resolution = WindowResolution::new(1280., 720.);
+    let window_resolution = WindowResolution::new(1280, 720);
     let canvas_size = Vec2::new(window_resolution.width(), window_resolution.height());
 
     // hex tilemap
@@ -52,5 +51,5 @@ fn main() {
 }
 
 fn camera_system(mut commands: Commands) {
-    commands.spawn(Camera2dBundle::default());
+    commands.spawn(Camera2d);
 }

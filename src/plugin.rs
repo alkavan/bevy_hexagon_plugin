@@ -2,9 +2,8 @@ use crate::map::HexMap;
 
 use bevy::math::vec3;
 use bevy::prelude::*;
-use bevy::text::JustifyText;
 use bevy::window::PrimaryWindow;
-use bevy_prototype_lyon::entity::ShapeBundle;
+use bevy::{color::palettes::css::*};
 use bevy_prototype_lyon::prelude::*;
 use hexagon_tiles::hexagon::Hex;
 use hexagon_tiles::layout::{
@@ -14,7 +13,6 @@ use hexagon_tiles::layout::{
     //LAYOUT_ORIENTATION_POINTY,
 };
 use hexagon_tiles::point::Point;
-use std::ops::Add;
 
 pub struct HexMapPlugin {
     pub tile_size: Vec2
@@ -40,48 +38,47 @@ fn setup_map(
     map_resource: Res<HexMap>,
     windows: Query<&Window, With<PrimaryWindow>>,
 ) {
-    let window = windows.single();
-    let ww = window.resolution.width();
-    let wh = window.resolution.height();
+    let window: &Window = windows.single().unwrap();
+
+    let ww: f32 = window.width();
+    let wh: f32 = window.height();
 
     for (key, value) in &map_resource.map {
-        let hexagon = bevy_prototype_lyon::prelude::RegularPolygon {
+        let hexagon = shapes::RegularPolygon {
             sides: 6,
-            center: Vec2::ZERO,
-            feature: RegularPolygonFeature::Radius(32.0),
-            ..shapes::RegularPolygon::default()
+            feature: shapes::RegularPolygonFeature::Radius(32.0),
+            ..default()
         };
 
-        let point = LayoutTool::hex_to_pixel(map_resource.layout, *key);
+        let point: Point = LayoutTool::hex_to_pixel(map_resource.layout, *key);
 
         commands.spawn((
-            ShapeBundle {
-                path: GeometryBuilder::build_as(&hexagon),
-                ..default()
-            },
-            Fill::color(Color::TEAL),
-            Stroke::new(Color::RED, 1.0),
+            ShapeBuilder::with(&hexagon)
+                .fill(TEAL)
+                .stroke((RED, 1.0))
+                .build(),
             HexagonComponent(*key),
         ));
 
         // spawn hexagon position texts
         commands.spawn((
-            // Create a TextBundle that has a Text with a list of sections.
-            TextBundle::from_sections([TextSection::new(
-                format!("({},{},{})", key.q(), key.r(), key.s()),
-                TextStyle {
-                    font: asset_server.load("fonts/RobotoMono-Regular.ttf"),
-                    font_size: 11.0,
-                    color: Color::WHITE,
-                },
-            )])
-            .with_text_justify(JustifyText::Center)
-            .with_style(Style {
-                position_type: PositionType::Absolute,
-                top: Val::Px((point.y as f32).add(wh / 2.)),
-                left: Val::Px((point.x as f32).add(ww / 2.)),
+            Text::new(format!("{},{},{}", key.q(), key.r(), key.s())),
+            TextFont {
+                font: asset_server.load("fonts/RobotoMono-Regular.ttf").into(),
+                font_size: 11.0,
                 ..default()
-            }),
+            },
+            TextColor(Color::WHITE),
+            TextLayout {
+                justify: Justify::Center,
+                ..default()
+            },
+            Node {
+                position_type: PositionType::Absolute,
+                top: Val::Px(point.y as f32 + wh / 2.0),
+                left: Val::Px(point.x as f32 + ww / 2.0),
+                ..default()
+            },
             HexagonText,
         ));
     }

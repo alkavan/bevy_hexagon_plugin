@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy::utils::HashMap;
+use std::collections::HashMap;
 use hexagon_tiles::hexagon::Hex;
 use hexagon_tiles::layout::Layout;
 

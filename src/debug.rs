@@ -1,8 +1,9 @@
-use bevy::prelude::*;
+
+use bevy::{prelude::*, color::palettes::css::*};
 use bevy_prototype_lyon::prelude::*;
 
 use bevy::math::{Vec2};
-use bevy::utils::HashMap;
+use std::collections::HashMap;
 
 pub struct DebugGridPlugin {
     pub grid_size: Vec2,
@@ -34,6 +35,7 @@ struct GridComponent(GridLineOrientation);
 
 impl Plugin for DebugGridPlugin {
     fn build(&self, app: &mut App) {
+        app.insert_resource(GridLayout::new(HashMap::new()));
         app
             .add_systems(Startup, setup_grid)
             .add_systems(Update, update_grid);
@@ -41,23 +43,27 @@ impl Plugin for DebugGridPlugin {
 }
 
 fn setup_grid(mut commands: Commands) {
-    let line = shapes::Line(Vec2::new(0.0, 0.0), Vec2::new(10.0, 0.0));
+    // Create a rectangle using bevy_prototype_lyon's Polygon shape
+    // Define the four corners of a rectangle
+    let points = vec![
+        Vec2::new(0.0, 0.0),
+        Vec2::new(100.0, 0.0),
+        Vec2::new(100.0, 100.0),
+        Vec2::new(0.0, 100.0),
+    ];
 
-    let square = shapes::Rectangle {
-        extents: Vec2::splat(100.0),
-        ..shapes::Rectangle::default()
+    let polygon = shapes::Polygon {
+        points,
+        closed: true,
     };
 
-    let mut builder = GeometryBuilder::new().add(&line).add(&square);
-
-    commands.spawn((
-        ShapeBundle {
-            path: builder.build(),
-            ..default()
-        },
-        Fill::color(Color::BLUE),
-        Stroke::new(Color::BLUE, 1.0),
-    ));
+    // Spawn with ShapeBuilder (the correct API for bevy_prototype_lyon 0.15.0)
+    commands.spawn(
+        ShapeBuilder::with(&polygon)
+            .fill(Color::srgb(0.0, 1.0, 0.0))
+            .stroke((Color::srgb(1.0, 0.0, 0.0), 2.0))
+            .build()
+    );
 }
 
 fn update_grid(
