@@ -2,16 +2,15 @@
 name = "bevy_hexagon_plugin"
 version = "0.1.0"
 authors = ["Igal Alkon"]
-edition = "2021"
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy = "0.13.1"
-lyon_tessellation = "1.0.13"
-bevy_prototype_lyon = "0.11.0"
+bevy = "0.17"
+bevy_prototype_lyon = "0.15"
 hexagon_tiles = "0.2.1"
-rand = "0.9.0-alpha.1"
+rand = "0.10.0-rc.0"
 
 [workspace]
 resolver = "2" # Important! wgpu/Bevy needs this!
